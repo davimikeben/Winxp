@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Windows XP WebAssembly Emulator</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Motor x86 WebAssembly compilado (v86) -->
+  <script src="https://cdn.jsdelivr.net/npm/v86@latest/build/libv86.js"></script>
+</head>
+<body>
+
+  <!-- Barra de Ferramentas / Cabeçalho -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="icon">💻</span>
+      <span>WinXP Virtual Wasm</span>
+    </div>
+    <div class="controls">
+      <label class="btn-file" title="Selecione um arquivo .img, .iso ou .vdi do seu celular">
+        📁 Abrir Imagem (ISO/IMG)
+        <input type="file" id="disk-image-file" accept=".iso,.img,.bin,.vdi">
+      </label>
+      <button id="btn-run" class="btn primary" disabled>▶ Iniciar</button>
+      <button id="btn-pause" class="btn" disabled>⏸ Pausar</button>
+      <button id="btn-fullscreen" class="btn">⛶ Tela Cheia</button>
+      <button id="btn-lock-mouse" class="btn">🖱️ Travar Mouse</button>
+    </div>
+  </header>
+
+  <!-- Área Principal da Tela do PC -->
+  <main class="viewport" id="viewport">
+    <div id="loading-overlay" class="overlay">
+      <div class="card">
+        <h2>Windows XP WebAssembly</h2>
+        <p class="subtitle">Emulação x86 em tempo real no navegador</p>
+        
+        <div class="instructions">
+          <p><strong>Como usar pelo celular:</strong></p>
+          <ol>
+            <li>Selecione uma imagem de disco do Windows XP (ex: <code>winxp.img</code>) de 256 MB a 1.2 GB usando o botão superior.</li>
+            <li>Ou carregue uma URL direta com suporte a streaming HTTP Range.</li>
+            <li>Clique em <strong>Iniciar</strong>.</li>
+          </ol>
+        </div>
+
+        <div class="url-input-group">
+          <input type="text" id="disk-url" placeholder="https://exemplo.com/winxp.img (opcional)" />
+          <button id="btn-load-url" class="btn">Carregar da Nuvem</button>
+        </div>
+
+        <div id="status-text" class="status">Aguardando arquivo de disco...</div>
+      </div>
+    </div>
+
+    <!-- O canvas onde o VGA desenha os gráficos da máquina -->
+    <div id="screen_container">
+      <div style="white-space: pre; font: 14px monospace; line-height: 14px"></div>
+      <canvas></canvas>
+    </div>
+  </main>
+
+  <!-- Barra de Status Inferior -->
+  <footer class="statusbar">
+    <span id="metric-ram">RAM: 512MB alocada</span>
+    <span id="metric-ips">IPS: 0 (Instruções/seg)</span>
+    <span id="status-log">Sistema: Desligado</span>
+  </footer>
+
+  <script src="js/emulator.js"></script>
+</body>
+</html>
