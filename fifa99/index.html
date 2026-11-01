@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#05100a">
+  <meta name="description" content="FIFA 99 (Nintendo 64) rodando no navegador via emulador WebAssembly. Seu arquivo nao sai do dispositivo.">
+  <title>FIFA 99 · N64 em WebAssembly</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2316b356'/%3E%3Ctext x='32' y='44' font-family='monospace' font-size='30' font-weight='bold' text-anchor='middle' fill='%2304170c'%3E99%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  <div id="app">
+
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">99</span>
+        <span class="brand-text">
+          <strong>FIFA 99</strong>
+          <small>Nintendo 64 &middot; WebAssembly</small>
+        </span>
+      </div>
+      <div class="topbar-meta">
+        <span class="tag">N64 &middot; WASM</span>
+        <span class="tag tag--ghost">EmulatorJS 4.2.3</span>
+      </div>
+    </header>
+
+    <main id="launcher" class="launcher">
+      <section class="card">
+        <h1>Rode FIFA 99 no navegador</h1>
+        <p class="lede">
+          Emulador de Nintendo 64 compilado para <strong>WebAssembly</strong>, rodando dentro da aba.
+          A ROM e lida direto do seu disco: nenhum byte e enviado para servidor.
+        </p>
+
+        <div id="dropzone" class="dropzone" tabindex="0" role="button"
+             aria-label="Selecionar a ROM de Nintendo 64">
+          <span class="dz-icon" aria-hidden="true">&#128193;</span>
+          <strong>Arraste a ROM aqui</strong>
+          <span class="dz-sub">ou toque para escolher &middot; .z64 / .n64 / .v64 / .zip</span>
+          <input type="file" id="rom-input" accept=".z64,.n64,.v64,.rom,.bin,.zip,.7z" hidden>
+        </div>
+
+        <div id="rom-info" class="rom-info" hidden></div>
+
+        <label class="check">
+          <input type="checkbox" id="chk-fullscreen">
+          <span>Abrir em tela cheia ao iniciar</span>
+        </label>
+
+        <label class="field">
+          <span class="field-label">Core de emulacao</span>
+          <select id="core-select">
+            <option value="parallel_n64" selected>parallel_n64 (recomendado)</option>
+            <option value="mupen64plus_next">mupen64plus_next (alternativo)</option>
+          </select>
+        </label>
+
+        <div class="actions">
+          <button id="btn-start" class="btn btn--primary" disabled>&#9654; Iniciar partida</button>
+          <button id="btn-fullscreen" class="btn">&#9974; Tela cheia</button>
+        </div>
+
+        <p id="status" class="status" role="status" aria-live="polite">Verificando suporte do navegador...</p>
+
+        <div class="caps">
+          <span id="cap-wasm" class="chip"></span>
+          <span id="cap-gl" class="chip"></span>
+          <span id="cap-threads" class="chip"></span>
+        </div>
+
+        <p id="hint-threads" class="hint" hidden>
+          <strong>SharedArrayBuffer indisponivel.</strong> O core vai rodar em modo
+          single-thread (mais lento, com quedas de quadro). Para liberar o modo multi-core,
+          sirva a pagina pelo <code>server.js</code> deste projeto (ele envia os headers
+          <code>Cross-Origin-Opener-Policy</code> e <code>Cross-Origin-Embedder-Policy</code>)
+          ou publique em um host que permita configurar esses headers.
+        </p>
+      </section>
+
+      <aside class="side">
+        <section class="side-block">
+          <h2>Como usar</h2>
+          <ol>
+            <li>Escolha o arquivo <code>FIFA 99 (USA) (...).z64</code>.</li>
+            <li>Confirme os dados do header na ficha que aparece.</li>
+            <li>Toque em <strong>Iniciar partida</strong> e aguarde o menu do jogo.</li>
+          </ol>
+        </section>
+
+        <section class="side-block">
+          <h2>Controles</h2>
+          <p class="side-note">
+            Mapeamento padrao do EmulatorJS para N64. Pode ser trocado em
+            <strong>Ajustes &rarr; Controles</strong> (engrenagem no menu inferior).
+          </p>
+          <table class="keys">
+            <caption>Teclado &middot; jogador 1</caption>
+            <tbody>
+              <tr><th>Botao A</th><td>X</td></tr>
+              <tr><th>Botao B</th><td>S</td></tr>
+              <tr><th>Direcional (D-Pad)</th><td>Setas</td></tr>
+              <tr><th>Stick analogico</th><td>H / F &middot; G / T</td></tr>
+              <tr><th>L / R / Z</th><td>Q / E / Tab</td></tr>
+              <tr><th>Botoes C</th><td>L / J / K / I</td></tr>
+              <tr><th>Start</th><td>Enter</td></tr>
+              <tr><th>Avanco / lento / rew</th><td>1 / 2 / 3</td></tr>
+            </tbody>
+          </table>
+          <p class="side-note">
+            Gamepad USB/Bluetooth entra automaticamente. No celular, o controle
+            virtual aparece ao tocar no icone de gamepad do menu inferior.
+          </p>
+        </section>
+
+        <section class="side-block">
+          <h2>Salvar progresso</h2>
+          <ul class="bullets">
+            <li>O app injeta um <strong>Controller Pak</strong> no slot 1, entao o save interno do FIFA 99 funciona.</li>
+            <li>O menu do emulador tambem tem <strong>save state</strong> instantaneo (rapido e independente do jogo).</li>
+          </ul>
+        </section>
+
+        <section class="side-block">
+          <h2>Requisitos</h2>
+          <ul class="bullets">
+            <li>Navegador com WebAssembly + WebGL (Chrome, Edge, Firefox, Safari 16+).</li>
+            <li>~50 MB de RAM livre e um dispositivo com CPU razoavel (o N64 e emulado por software).</li>
+            <li>Headers COOP/COEP para o modo multi-thread &mdash; ja configurados no <code>server.js</code>.</li>
+          </ul>
+        </section>
+
+        <section class="side-block side-block--legal">
+          <h2>Nota legal</h2>
+          <p>
+            Este projeto entrega <strong>apenas o runtime</strong> (emulador WASM + interface).
+            A ROM de <em>FIFA 99</em> e propriedade da EA Sports / Nintendo e
+            <strong>nao esta incluida</strong>. Use somente um dump que voce mesmo extraiu
+            do seu proprio cartucho.
+          </p>
+        </section>
+      </aside>
+    </main>
+
+    <section id="player" class="player" hidden>
+      <div id="game"></div>
+      <button id="btn-swap" class="fab" hidden title="Trocar ROM">&#8592; ROM</button>
+      <button id="btn-shot" class="fab fab--right" hidden title="Salvar print">&#128247;</button>
+    </section>
+
+    <footer class="footer">
+      <span>Runtime local: <code>vendor/emulatorjs/</code></span>
+      <span id="foot-threads">Threads: &mdash;</span>
+      <span>&copy; 2026 &middot; projeto educacional</span>
+    </footer>
+  </div>
+
+  <script src="js/rom.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

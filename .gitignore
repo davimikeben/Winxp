@@ -1,0 +1,9 @@
+# Artefatos locais (zip de entrega, caches)
+fifa99-wasm.zip
+*.zip
+node_modules/
+
+# ROMs / conteudo de jogo: nunca versionar
+*.z64
+*.n64
+*.v64

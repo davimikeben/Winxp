@@ -1,0 +1,19 @@
+# Dependencias e artefatos de build
+node_modules/
+dist/
+*.log
+
+# ROMs: NUNCA comitar conteudo de jogo (propriedade da EA Sports / Nintendo).
+# Coloque a sua ROM em roms/ apenas localmente; esta pasta e ignorada.
+roms/*
+!roms/README.md
+
+# Estados de save gerados localmente
+*.state
+*.sav
+*.srm
+*.eep
+
+# Sistema
+.DS_Store
+Thumbs.db

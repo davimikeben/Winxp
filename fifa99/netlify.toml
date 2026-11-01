@@ -1,0 +1,19 @@
+# Deploy (Netlify / Vercel / Cloudflare Pages)
+#
+# O modo multi-thread do core depende de SharedArrayBuffer, que exige
+# isolamento de origem. Estes headers sao obrigatorios em producao.
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cross-Origin-Opener-Policy = "same-origin"
+    Cross-Origin-Embedder-Policy = "require-corp"
+    Cross-Origin-Resource-Policy = "cross-origin"
+    X-Content-Type-Options = "nosniff"
+
+# .data do core: binario grande, deixa explicito o tipo
+[[headers]]
+  for = "/vendor/emulatorjs/data/cores/*"
+  [headers.values]
+    Content-Type = "application/octet-stream"
+    Cache-Control = "public, max-age=604800, immutable"
