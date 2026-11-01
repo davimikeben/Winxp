@@ -348,7 +348,10 @@
     // Se o core demorar muito, avisa o usuario em vez de travar a tela.
     window.setTimeout(function () {
       if (state.starting) {
-        setStatus('Ainda carregando o core... (primeira vez baixa ~1,5 MB)', 'info');
+        setStatus(
+          'Ainda carregando o core... (descompactando o WASM local, ~1,5 MB)',
+          'info'
+        );
       }
     }, 12000);
   }
